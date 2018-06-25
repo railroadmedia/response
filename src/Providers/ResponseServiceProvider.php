@@ -23,6 +23,6 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->app->bind('fractal.response', 'Railroad\Response\Services\ResponseService' );
     }
 }
