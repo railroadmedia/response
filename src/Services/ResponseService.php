@@ -2,10 +2,20 @@
 
 namespace Railroad\Response\Services;
 
+use Illuminate\Http\Request;
 use Railroad\Response\Transformers\DataTransformer;
+use Railroad\Resora\Collections\BaseCollection;
+use Railroad\Resora\Entities\Entity;
 
 class ResponseService
 {
+    protected $request;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
     /** Transform the data in JSON response
      *
      * @return mixed
@@ -22,15 +32,18 @@ class ResponseService
     /**
      * @param mixed $data
      * @param array $options response options with follwing keys
-     * 'transformer' - string - The transformer to be used, default \Railroad\Response\Transformers\DataTransformer
-     * 'meta'        - array  - metadata key/value
-     * 'code'        - int    - HTTP code of the response
-     * 'headers'     - array  - HTTP response headers key/value
+     * 'transformer'   - string - The transformer to be used, default \Railroad\Response\Transformers\DataTransformer
+     * 'totalResults'  - int    - if the collection represents a page of results, this represents the total results count
+     * 'filterOptions' - mixed  - TO DO: add description
+     * 'meta'          - array  - metadata key/value
+     * 'code'          - int    - HTTP code of the response
+     * 'headers'       - array  - HTTP response headers key/value
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function result($data, array $options = []) {
-
+    public function result($data, array $options = [])
+    {
+        // add default options
         $options += [
             'transformer' => DataTransformer::class,
             'meta' => [],
@@ -38,13 +51,28 @@ class ResponseService
             'headers' => []
         ];
 
-        if (
-            $data &&
-            !is_array($data) &&
-            !($data instanceof \Traversable)
-        ) {
+        // handle collection default pagination meta - move from options to options['meta']
+        if (isset($options['totalResults'])) {
 
-            $data = [$data];
+            $options['meta']['totalResults'] = $options['totalResults'];
+
+            // add page and limit from $this->request
+            $options['meta']['page'] = $this->request->get('page', 1);
+            $options['meta']['limit'] = $this->request->get('limit', 10);
+        }
+
+        if (isset($options['filterOptions'])) {
+            $options['meta']['filterOptions'] = $options['filterOptions'];
+        }
+
+        // handle data: if single Entity instance, or non-array, wrap value in array
+        if (
+            ($data instanceof Entity) ||
+            (!is_array($data) &&
+            !($data instanceof \Traversable) &&
+            !($data instanceof BaseCollection))
+        ) {
+            $data = $data ? [$data] : [];
         }
 
         return fractal()
