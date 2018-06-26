@@ -16,19 +16,6 @@ class ResponseService
         $this->request = $request;
     }
 
-    /** Transform the data in JSON response
-     *
-     * @return mixed
-     */
-    public function getJSONResponse($data)
-    {
-
-        return fractal()
-            ->collection($data)
-            ->transformWith(DataTransformer::class)
-            ->toJson();
-    }
-
     /**
      * @param mixed $data
      * @param array $options response options with follwing keys
@@ -41,7 +28,7 @@ class ResponseService
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function result($data, array $options = [])
+    public function json($data, array $options = [])
     {
         // add default options
         $options += [

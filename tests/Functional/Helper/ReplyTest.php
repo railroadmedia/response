@@ -1,16 +1,15 @@
 <?php
 
-namespace Railroad\Response\Tests\Functional\Facade;
+namespace Railroad\Response\Tests\Functional\Helper;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\JsonResponse;
-use Railroad\Response\Facades\Response;
 use Railroad\Resora\Entities\Entity;
 use Railroad\Response\Tests\TestCase;
 
 class ResponseTest extends TestCase
 {
-    public function test_fractal_response_entity_single()
+	public function test_json_response_entity_single()
     {
         $entityData = [
             $this->faker->word => $this->faker->word,
@@ -21,7 +20,7 @@ class ResponseTest extends TestCase
         $entity = new Entity();
         $entity->replace($entityData);
 
-        $response = Response::result($entity);
+        $response = reply()->json($entity);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 
@@ -52,7 +51,7 @@ class ResponseTest extends TestCase
         $entityTwo = new Entity();
         $entityTwo->replace($entityTwoData);
 
-        $response = Response::result([$entityOne, $entityTwo]);
+        $response = reply()->json([$entityOne, $entityTwo]);
 
         $this->assertInstanceOf(JsonResponse::class, $response);
 
@@ -80,7 +79,7 @@ class ResponseTest extends TestCase
             $this->faker->word => $this->faker->word
         ];
 
-        $response = Response::result(
+        $response = reply()->json(
             $entity,
             ['meta' => $metaData]
         );
@@ -108,7 +107,7 @@ class ResponseTest extends TestCase
         $entity = new Entity();
         $entity->replace($entityData);
 
-        $response = Response::result(
+        $response = reply()->json(
             $entity,
             ['code' => 202]
         );
@@ -139,7 +138,7 @@ class ResponseTest extends TestCase
         $headerTwoName = $this->faker->word;
         $headerTwoValue = $this->faker->word;
 
-        $response = Response::result(
+        $response = reply()->json(
             $entity,
             [
                 'headers' => [

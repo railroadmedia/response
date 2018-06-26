@@ -18,7 +18,10 @@
   "autoload": {
     "psr-4": {
       "Railroad\\Response\\": "src"
-    }
+    },
+    "files": [
+        "src/Helpers/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
