@@ -22,6 +22,7 @@ class ResponseService
      * 'transformer'   - string - The transformer to be used, default \Railroad\Response\Transformers\DataTransformer
      * 'totalResults'  - int    - if the collection represents a page of results, this represents the total results count
      * 'filterOptions' - mixed  - TO DO: add description
+     * 'errors'        - array  - details of errors, validation errors format: [['source' => 'field', 'detail' => 'error message'], [..], ..]
      * 'meta'          - array  - metadata key/value
      * 'code'          - int    - HTTP code of the response
      * 'headers'       - array  - HTTP response headers key/value
@@ -50,6 +51,11 @@ class ResponseService
 
         if (isset($options['filterOptions'])) {
             $options['meta']['filterOptions'] = $options['filterOptions'];
+        }
+
+        // handle errors - move from options to options['meta']
+        if (isset($options['errors'])) {
+            $options['meta']['errors'] = $options['errors'];
         }
 
         // handle data: if single Entity instance, or non-array, wrap value in array
