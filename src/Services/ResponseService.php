@@ -16,6 +16,29 @@ class ResponseService
         $this->request = $request;
     }
 
+    public function form($successMessages = [true], $redirectLocation = null, $errorMessages = [], $results = [])
+    {
+        $next = $redirectLocation ?? $this->request->get('redirect');
+
+        /** @var \Illuminate\Http\RedirectResponse $redirectResponse */
+        $redirectResponse = $next ? redirect()->away($next) :
+            redirect()->back();
+
+        foreach ($successMessages as $message) {
+            $redirectResponse->with('success', $message);
+        }
+
+        foreach ($errorMessages as $message) {
+            $redirectResponse->with('error', $message);
+        }
+
+        foreach ($results as $message) {
+            $redirectResponse->with('result', $message);
+        }
+
+        return $redirectResponse;
+    }
+
     /**
      * @param mixed $data
      * @param array $options response options with follwing keys
