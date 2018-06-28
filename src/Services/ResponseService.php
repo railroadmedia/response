@@ -32,8 +32,9 @@ class ResponseService
             $redirectResponse->with('error', $message);
         }
 
-        foreach ($results as $message) {
-            $redirectResponse->with('result', $message);
+        foreach($results as $key => $value)
+        {
+            $redirectResponse->with($key, $value);
         }
 
         return $redirectResponse;
