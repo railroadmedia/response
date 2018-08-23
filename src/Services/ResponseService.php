@@ -2,10 +2,11 @@
 
 namespace Railroad\Response\Services;
 
+use ArrayObject;
 use Illuminate\Http\Request;
 use Railroad\Response\Transformers\DataTransformer;
 use Railroad\Resora\Collections\BaseCollection;
-use Railroad\Resora\Entities\Entity;
+use Traversable;
 
 class ResponseService
 {
@@ -84,9 +85,9 @@ class ResponseService
 
         // handle data: if single Entity instance, or non-array, wrap value in array
         if (
-            ($data instanceof Entity) ||
+            ($data instanceof ArrayObject) ||
             (!is_array($data) &&
-            !($data instanceof \Traversable) &&
+            !($data instanceof Traversable) &&
             !($data instanceof BaseCollection))
         ) {
             $data = $data ? [$data] : [];
