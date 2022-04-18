@@ -2,12 +2,12 @@
 
 namespace Railroad\Response\Tests\Functional\Helper;
 
-use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Http\JsonResponse;
 use Railroad\Resora\Entities\Entity;
 use Railroad\Response\Tests\TestCase;
 
-class ResponseTest extends TestCase
+class ReplyTest extends TestCase
 {
 	public function test_json_response_entity_single()
     {
